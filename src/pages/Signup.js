@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { auth, storage } from "../firebase";
+import { Redirect } from "react-router";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -48,7 +50,12 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
-
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  const [image, setImage] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [url, setUrl] = useState("");
   const handleCheckChange = (e) => {
     setChecked(e.target.checked);
   };
@@ -56,6 +63,81 @@ export default function SignUp() {
     background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
 
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+  };
+
+  const signUp = () => {
+    if (!name) {
+      return alert("Enter Name");
+    } else {
+      auth
+        .createUserWithEmailAndPassword(
+          email.current.value,
+          password.current.value
+        )
+        .then((userAuth) => {
+          userAuth.user
+            .updateProfile({
+              displayName: name.current.value,
+              photoURL: url,
+            })
+            .then(() => {
+              console.log(userAuth);
+              email.current.value = "";
+              password.current.value = "";
+              name.current.value = "";
+            });
+          // .then(() => {
+          //   dispatch(
+          //     login({
+          //       email: userAuth.user.email,
+          //       uid: userAuth.user.uid,
+          //       name: name,
+          //       photo: photoUrl,
+          //     })
+          //   );
+          // });
+        })
+        .catch((error) => alert(error));
+    }
+  };
+  const handleChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = (e) => {
+    e.preventDefault();
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // progress function ...
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progress);
+      },
+      (error) => {
+        // Error function ...
+        console.log(error);
+      },
+      () => {
+        // complete function ...
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            setUrl(url);
+            console.log(url);
+
+            signUp();
+            setProgress(0);
+            setImage(null);
+          });
+      }
+    );
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -79,6 +161,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                inputRef={name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -137,6 +220,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                inputRef={email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -149,6 +233,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputRef={password}
               />
             </Grid>
           </Grid>
@@ -159,6 +244,7 @@ export default function SignUp() {
             id="raised-button-file"
             multiple
             type="file"
+            onChange={handleChange}
           />
           <label htmlFor="raised-button-file">
             <Button
@@ -176,6 +262,7 @@ export default function SignUp() {
             variant="contained"
             style={style}
             className={classes.submit}
+            onClick={handleUpload}
           >
             Sign Up
           </Button>
