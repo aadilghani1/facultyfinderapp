@@ -1,9 +1,8 @@
 import React from "react";
 import "./App.css";
-import Home from "./pages/Home";
 import Header from "./layout/Header";
 import Landing from "./pages/Landing";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import FacSignin from "./pages/FacultySignin";
 import StudSignin from "./pages/StudentSignin";
 import Signup from "./pages/Signup";
