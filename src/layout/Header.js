@@ -58,7 +58,7 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             Faculty Finder App
           </Typography>
-          {user ? (
+          {user && user?.photoURL ? (
             <>
               <Button color="inherit" onClick={handleLogout}>
                 LogOut
