@@ -11,3 +11,9 @@
 .link:hover {
   cursor: pointer;
 }
+
+.logo__container {
+  position: fixed;
+  top: 35%;
+  left: 40%;
+}

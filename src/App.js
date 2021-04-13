@@ -18,13 +18,15 @@ import PageNotFound from "./pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import { UserContext } from "./context/UserContext";
 import { auth } from "./firebase";
+import animate from "./animation.gif";
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(async () => {
       await setLoading(false);
-    }, 2500);
+    }, 1500);
     auth.onAuthStateChanged((user) => {
       if (user) {
         console.log(user);
@@ -35,7 +37,7 @@ function App() {
 
   return loading === true ? (
     <div className="logo__container">
-      <h1>Loading...</h1>
+      <img src={animate} alt="loader" />
     </div>
   ) : (
     <Router>
