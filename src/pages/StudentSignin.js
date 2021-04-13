@@ -106,7 +106,7 @@ export default function SignIn() {
             inputRef={password}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox value="remember" color="secondary" />}
             label="Remember me"
           />
           <Button
