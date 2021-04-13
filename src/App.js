@@ -37,7 +37,7 @@ function App() {
 
   return loading === true ? (
     <div className="logo__container">
-      <img src={animate} alt="loader" />
+      <img src={animate} alt="loader" className="logo__image" />
     </div>
   ) : (
     <Router>

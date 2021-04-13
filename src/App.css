@@ -14,6 +14,11 @@
 
 .logo__container {
   position: fixed;
-  top: 35%;
+  top: 30%;
   left: 40%;
+}
+
+#ticgame {
+  position: relative;
+  bottom: 600px;
 }
