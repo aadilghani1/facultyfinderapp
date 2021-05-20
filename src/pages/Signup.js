@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { auth, storage } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { UserContext } from "../context/UserContext";
 function Copyright() {
   return (
@@ -50,8 +50,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
-  const name = useRef(null);
-  const email = useRef(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [facultyId, setFacultyId] = useState("");
+  const [email, setEmail] = useState("");
   const password = useRef(null);
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -65,49 +67,11 @@ export default function SignUp() {
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
   };
 
-  // const signUp = (e) => {
-  //   e.preventDefault();
-  //   if (!name) {
-  //     return alert("Enter Name");
-  //   } else {
-  //     auth
-  //       .createUserWithEmailAndPassword(
-  //         email.current.value,
-  //         password.current.value
-  //       )
-  //       .then((userAuth) => {
-  //         console.log(url);
-  //         userAuth.user
-  //           .updateProfile({
-  //             displayName: name.current.value,
-  //             photoURL: url,
-  //           })
-  //           .then(() => {
-  //             console.log(userAuth);
-  //             // email.current.value = "";
-  //             // password.current.value = "";
-  //             // name.current.value = "";
-  //           });
-  //         // .then(() => {
-  //         //   dispatch(
-  //         //     login({
-  //         //       email: userAuth.user.email,
-  //         //       uid: userAuth.user.uid,
-  //         //       name: name,
-  //         //       photo: photoUrl,
-  //         //     })
-  //         //   );
-  //         // });
-  //       })
-  //       .catch((error) => alert(error));
-  //   }
-  // };
   const handleChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
   };
-
   const handleUpload = (e) => {
     e.preventDefault();
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
@@ -132,39 +96,39 @@ export default function SignUp() {
           .getDownloadURL()
           .then((url) => {
             auth
-              .createUserWithEmailAndPassword(
-                email.current.value,
-                password.current.value
-              )
+              .createUserWithEmailAndPassword(email, password.current.value)
               .then((userAuth) => {
-                console.log(url);
                 userAuth.user
                   .updateProfile({
-                    displayName: name.current.value,
+                    displayName: firstName,
                     photoURL: url,
                   })
                   .then(() => {
-                    console.log(userAuth);
                     setUser({
                       email: userAuth.user.email,
                       uid: userAuth.user.uid,
-                      name: name,
                       photoURL: url,
+                      name: firstName,
                     });
-                    // email.current.value = "";
-                    // password.current.value = "";
-                    // name.current.value = "";
+                  })
+                  .then(() => {
+                    if (checked) {
+                      db.collection("faculties").doc(facultyId).set({
+                        id: facultyId,
+                        name: firstName,
+                        lastName: lastName,
+                        email: email,
+                        photoURL: url,
+                      });
+                    } else {
+                      db.collection("students").add({
+                        name: firstName,
+                        lastName: lastName,
+                        email: email,
+                        photoURL: url,
+                      });
+                    }
                   });
-                // .then(() => {
-                //   dispatch(
-                //     login({
-                //       email: userAuth.user.email,
-                //       uid: userAuth.user.uid,
-                //       name: name,
-                //       photo: photoUrl,
-                //     })
-                //   );
-                // });
               })
               .catch((error) => alert(error));
           });
@@ -185,7 +149,6 @@ export default function SignUp() {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="fname"
                 name="firstName"
                 variant="outlined"
                 required
@@ -193,7 +156,8 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                inputRef={name}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -204,17 +168,8 @@ export default function SignUp() {
                 id="lastName"
                 label="Last Name"
                 name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="school"
-                label="School"
-                id="school"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -237,6 +192,8 @@ export default function SignUp() {
                     id="facultyId"
                     label="Faculty ID"
                     name="facultyId"
+                    value={facultyId}
+                    onChange={(e) => setFacultyId(e.target.value)}
                   />
                 </Grid>
               ) : (
@@ -252,7 +209,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                inputRef={email}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
