@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Particles from "react-particles-js";
 import Typewriter from "typewriter-effect";
-import Tic from "../TicTacToe/Tic";
 
 function PageNotFound() {
-  const [toggle, setToggle] = useState(false);
   return (
     <div style={{ background: "#fff5f8" }}>
       <Particles
@@ -41,12 +39,11 @@ function PageNotFound() {
         <Typewriter
           onInit={(typewriter) => {
             typewriter
-              .typeString("404 Error Mate but play Tic Tac Toe if you like")
-              .pauseFor(2)
+              .typeString("404 Bad route please try again later")
+              .pauseFor(10)
               .deleteAll()
 
               .callFunction(() => {
-                setToggle(true);
                 document.getElementById("typebro").remove();
               })
 
@@ -54,13 +51,6 @@ function PageNotFound() {
           }}
         />
       </div>
-      {toggle ? (
-        <div id="ticgame">
-          <Tic />
-        </div>
-      ) : (
-        <></>
-      )}
     </div>
   );
 }
