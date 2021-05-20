@@ -29,7 +29,6 @@ function App() {
     }, 1500);
     auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
         setUser(user);
       }
     });
