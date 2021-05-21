@@ -14,6 +14,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { auth, db, storage } from "../firebase";
 import { UserContext } from "../context/UserContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -72,8 +75,21 @@ export default function SignUp() {
       setImage(e.target.files[0]);
     }
   };
+  const notify = () => {
+    toast.error("Creating an Account", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: true,
+
+      progress: progress,
+    });
+  };
   const handleUpload = (e) => {
     e.preventDefault();
+    notify();
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       "state_changed",
@@ -137,6 +153,7 @@ export default function SignUp() {
   };
   return (
     <Container component="main" maxWidth="xs">
+      <ToastContainer />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
