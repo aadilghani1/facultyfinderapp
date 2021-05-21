@@ -66,7 +66,7 @@ export default function SignIn() {
           uid: userAuth.uid,
           photoURL: userAuth.url,
           name: userAuth.displayName,
-          role: "student",
+          role: "faculty",
         });
         localStorage.setItem("role", "faculty");
       })
