@@ -125,24 +125,31 @@ export default function SignUp() {
                       uid: userAuth.user.uid,
                       photoURL: url,
                       name: firstName,
+                      role: checked ? "faculty" : "student",
                     });
                   })
                   .then(() => {
                     if (checked) {
-                      db.collection("faculties").doc(facultyId).set({
-                        id: facultyId,
-                        name: firstName,
-                        lastName: lastName,
-                        email: email,
-                        photoURL: url,
-                      });
+                      db.collection("faculties")
+                        .doc(facultyId)
+                        .set({
+                          id: facultyId,
+                          name: firstName,
+                          lastName: lastName,
+                          email: email,
+                          photoURL: url,
+                          feedbacks: [],
+                        })
+                        .then(localStorage.setItem("role", "faculty"));
                     } else {
-                      db.collection("students").add({
-                        name: firstName,
-                        lastName: lastName,
-                        email: email,
-                        photoURL: url,
-                      });
+                      db.collection("students")
+                        .add({
+                          name: firstName,
+                          lastName: lastName,
+                          email: email,
+                          photoURL: url,
+                        })
+                        .then(localStorage.setItem("role", "student"));
                     }
                   });
               })

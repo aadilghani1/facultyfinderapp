@@ -56,8 +56,14 @@ export default function SignIn() {
     auth
       .signInWithEmailAndPassword(email.current.value, password.current.value)
       .then((userAuth) => {
-        console.log(userAuth);
-        setUser(userAuth);
+        setUser({
+          email: userAuth.email,
+          uid: userAuth.uid,
+          photoURL: userAuth.url,
+          name: userAuth.displayName,
+          role: "student",
+        });
+        localStorage.setItem("role", "student");
       })
       .catch((error) => alert(error.message));
   };
