@@ -49,6 +49,7 @@ export default function ButtonAppBar() {
     e.preventDefault();
     auth.signOut();
     setUser(null);
+    localStorage.removeItem("role");
   };
 
   return (

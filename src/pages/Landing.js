@@ -5,7 +5,7 @@ import Typewriter from "typewriter-effect";
 function Landing() {
   return (
     <div style={{ background: "#fff" }}>
-      <Particles
+      {/* <Particles
         params={{
           particles: {
             number: {
@@ -28,7 +28,7 @@ function Landing() {
           },
         }}
         height="580px"
-      />
+      /> */}
       <div
         className="typing"
         id="typebro"

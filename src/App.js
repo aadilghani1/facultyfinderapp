@@ -17,23 +17,35 @@ import { useState } from "react";
 import PageNotFound from "./pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import { UserContext } from "./context/UserContext";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import animate from "./animation.gif";
+import FacultyInfo from "./pages/FacultyInfo";
+import StudentDashboard from "./pages/StudentDashboard";
+import FacultyDashboard from "./pages/FacultyDashboard";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [faculty, setFaculty] = useState({});
   useEffect(() => {
     setTimeout(async () => {
       await setLoading(false);
     }, 1500);
     auth.onAuthStateChanged((user) => {
       if (user) {
-        setUser(user);
+        setUser({
+          email: user.email,
+          name: user.displayName,
+          photoURL: user.photoURL,
+          role: localStorage.getItem("role"),
+        });
       }
     });
+    db.collection("faculties")
+      .doc("1090021233")
+      .onSnapshot((doc) => setFaculty(doc.data()));
   }, []);
-
+  console.log(user);
   return loading === true ? (
     <div className="logo__container">
       <img src={animate} alt="loader" className="logo__image" />
@@ -45,8 +57,16 @@ function App() {
         <Header />
         <Switch>
           <Route exact path="/">
-            {console.log(user)}
-            {user ? <Landing /> : <Redirect to="/signup" />}
+            {/* {console.log(user)} */}
+            {user ? (
+              user?.role === "student" ? (
+                <StudentDashboard />
+              ) : (
+                <FacultyDashboard />
+              )
+            ) : (
+              <Redirect to="/signup" />
+            )}
           </Route>
           <Route exact path="/facsignin">
             {user ? <Redirect to="/" /> : <FacSignin />}
@@ -56,6 +76,13 @@ function App() {
           </Route>
           <Route exact path="/signup">
             {user ? <Redirect to="/" /> : <Signup />}
+          </Route>
+          <Route exact path="/facultyinfo">
+            {user?.role !== "student" ? (
+              <Redirect to="/" />
+            ) : (
+              <FacultyInfo faculty={faculty} />
+            )}
           </Route>
           <Route exact path="*" component={PageNotFound}></Route>
         </Switch>
