@@ -6,6 +6,7 @@ function Developing() {
   const { user } = useContext(UserContext);
   const [description, setDescription] = useState("");
   const [display, setDisplay] = useState("");
+  const [toggle, setToggle] = useState(false);
   useEffect(() => {
     if (user.role === "faculty") {
       db.collection("faculties")
@@ -14,7 +15,7 @@ function Developing() {
           setDisplay(snapshot?.data()?.description);
         });
     }
-  });
+  }, [toggle]);
   const sendDescription = (e) => {
     e.preventDefault();
     db.collection("faculties")
@@ -22,6 +23,7 @@ function Developing() {
       .update({ description: description })
       .then(() => {
         setDescription("");
+        setToggle(!toggle);
       });
   };
   return (
@@ -96,7 +98,7 @@ function Developing() {
             </p>
             <p class="pt-8 text-sm">
               {user.role === "faculty" ? (
-                display.length > 0 ? (
+                display?.length > 0 ? (
                   `Description: ${display}`
                 ) : (
                   <div className="flex flex-row space-x-2 w-full  py-3 px-5 justify-between items-center bg-white shadow-xl rounded-lg">
@@ -117,6 +119,8 @@ function Developing() {
                     </button>
                   </div>
                 )
+              ) : display.length > 0 ? (
+                display
               ) : (
                 ""
               )}
