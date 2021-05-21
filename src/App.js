@@ -26,7 +26,7 @@ import FacultyDashboard from "./pages/FacultyDashboard";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [faculty, setFaculty] = useState({});
+  const [description, setDescription] = useState("");
   useEffect(() => {
     setTimeout(async () => {
       await setLoading(false);
@@ -35,15 +35,13 @@ function App() {
       if (user) {
         setUser({
           email: user.email,
+          uid: user.uid,
           name: user.displayName,
           photoURL: user.photoURL,
           role: localStorage.getItem("role"),
         });
       }
     });
-    db.collection("faculties")
-      .doc("1090021233")
-      .onSnapshot((doc) => setFaculty(doc.data()));
   }, []);
   console.log(user);
   return loading === true ? (
@@ -78,11 +76,7 @@ function App() {
             {user ? <Redirect to="/" /> : <Signup />}
           </Route>
           <Route exact path="/facultyinfo">
-            {user?.role !== "student" ? (
-              <Redirect to="/" />
-            ) : (
-              <FacultyInfo faculty={faculty} />
-            )}
+            {user?.role !== "student" ? <Redirect to="/" /> : <FacultyInfo />}
           </Route>
           <Route exact path="*" component={PageNotFound}></Route>
         </Switch>

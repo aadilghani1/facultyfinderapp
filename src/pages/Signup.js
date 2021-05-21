@@ -131,9 +131,9 @@ export default function SignUp() {
                   .then(() => {
                     if (checked) {
                       db.collection("faculties")
-                        .doc(facultyId)
+                        .doc(userAuth.user.uid)
                         .set({
-                          id: facultyId,
+                          id: userAuth.user.uid,
                           name: firstName,
                           lastName: lastName,
                           email: email,
@@ -207,7 +207,7 @@ export default function SignUp() {
                 }
                 label="Are you a Faculty?"
               />
-              {checked ? (
+              {/* {checked ? (
                 <Grid item xs={12} sm={6}>
                   <TextField
                     variant="outlined"
@@ -222,7 +222,7 @@ export default function SignUp() {
                 </Grid>
               ) : (
                 <></>
-              )}
+              )} */}
             </Grid>
             <Grid item xs={12}>
               <TextField
