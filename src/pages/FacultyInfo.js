@@ -91,10 +91,7 @@ const FacultyInfo = () => {
                 </svg>{" "}
                 Location - AB1, 4th floor Cabin No:- 8
               </p>
-              <p class="pt-8 text-sm">
-                Totally optional short description about yourself, what you do
-                and so on.
-              </p>
+              <p class="pt-8 text-sm">{`Description: ${faculty?.description}`}</p>
             </div>
           </div>
 
