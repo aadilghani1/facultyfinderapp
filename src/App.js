@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import Header from "./layout/Header";
-import Landing from "./pages/Landing";
+// import Landing from "./pages/Landing";
 
 import {
   BrowserRouter as Router,
@@ -17,7 +17,7 @@ import { useState } from "react";
 import PageNotFound from "./pages/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import { UserContext } from "./context/UserContext";
-import { auth, db } from "./firebase";
+import { auth } from "./firebase";
 import animate from "./animation.gif";
 import FacultyInfo from "./pages/FacultyInfo";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -26,7 +26,7 @@ import FacultyDashboard from "./pages/FacultyDashboard";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [description, setDescription] = useState("");
+  // const [description, setDescription] = useState("");
   useEffect(() => {
     setTimeout(async () => {
       await setLoading(false);

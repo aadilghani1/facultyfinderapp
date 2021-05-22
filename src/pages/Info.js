@@ -15,7 +15,7 @@ function Developing() {
           setDisplay(snapshot?.data()?.description);
         });
     }
-  }, [toggle]);
+  }, [toggle, display, user?.uid, user?.role]);
   const sendDescription = (e) => {
     e.preventDefault();
     db.collection("faculties")

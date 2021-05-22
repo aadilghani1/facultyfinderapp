@@ -1,4 +1,3 @@
-import { Avatar } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { db } from "../firebase";
@@ -91,7 +90,11 @@ const FacultyInfo = () => {
                 </svg>{" "}
                 Location - AB1, 4th floor Cabin No:- 8
               </p>
-              <p class="pt-8 text-sm">{`Description: ${faculty?.description}`}</p>
+              {faculty?.description ? (
+                <p class="pt-8 text-sm">{`Description: ${faculty?.description}`}</p>
+              ) : (
+                ""
+              )}
             </div>
           </div>
 
