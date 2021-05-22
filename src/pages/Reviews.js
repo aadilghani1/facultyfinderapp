@@ -18,9 +18,11 @@ const Reviews = () => {
       <h1 class="text-3xl font-bold py-8 lg:pt-0">Feedbacks</h1>
 
       {feedbacks?.map((feedback, i) => (
-        <h1 class="text-xl font-semibold py-8 lg:pt-0">
-          {i + 1}: {feedback}
-        </h1>
+        <div className="flex my-2 max-w-3xl w-auto  py-3 px-5 justify-between  bg-white hover:bg-gray-50 cursor-pointer shadow-xl rounded-lg">
+          <h1 class="text-xl text-gray-500 font-semibold py-8 lg:pt-0">
+            {i + 1}: {feedback}
+          </h1>
+        </div>
       ))}
     </div>
   );

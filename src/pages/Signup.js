@@ -55,7 +55,7 @@ export default function SignUp() {
   const [checked, setChecked] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [facultyId, setFacultyId] = useState("");
+  // const [facultyId, setFacultyId] = useState("");
   const [email, setEmail] = useState("");
   const password = useRef(null);
   const [image, setImage] = useState(null);
